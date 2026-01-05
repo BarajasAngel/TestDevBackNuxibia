@@ -146,3 +146,155 @@ Trabaja en SQL Server y realiza las siguientes consultas basadas en la tabla `cc
 ---
 
 Este examen evalúa tu capacidad para desarrollar APIs RESTful, realizar consultas avanzadas en SQL Server y generar reportes en formato CSV. Se valorará la organización del código, las mejores prácticas y cualquier documentación adicional que proporciones.
+
+# TestDevBackNuxibia
+
+Este repositorio contiene un entorno **reproducible** para levantar **SQL Server 2022 Developer** en Docker y **cargar datos** desde `CCenterRIA.xlsx` mediante un flujo **XLSX → TSV → BULK INSERT** (compatible con SQL Server en Linux).
+
+---
+
+## Requisitos
+
+- Docker Desktop (backend WSL2)
+- Git
+- (Opcional) SQL Server Management Studio (SSMS) o Azure Data Studio para validar
+
+---
+
+## Quick Start
+
+### 1) Configurar variables
+1. Crea tu archivo `.env` a partir del ejemplo:
+```bash
+copy .env.example .env
+```
+
+2. Edita `.env` y define la contraseña:
+```env
+MSSQL_SA_PASSWORD=Str0ng!Passw0rd#2026
+```
+
+> Asegúrate de usar una contraseña fuerte (mayúsculas/minúsculas/números/símbolos).
+
+---
+
+### 2) Build del loader (XLSX → TSV)
+```bash
+docker compose build xlsx2tsv
+```
+
+---
+
+### 3) Levantar SQL Server
+```bash
+docker compose up -d sqlserver
+docker compose ps
+```
+
+---
+
+### 4) Esperar a que SQL Server esté "healthy"
+**PowerShell:**
+```powershell
+while ((docker inspect -f '{{.State.Health.Status}}' sql-nuxiba) -ne 'healthy') { Start-Sleep 2 }
+docker inspect -f '{{.State.Health.Status}}' sql-nuxiba
+```
+
+---
+
+### 5) Convertir XLSX → TSV
+Este paso genera los archivos `.tsv` en el volumen `import_data`:
+```bash
+docker compose run --rm xlsx2tsv
+```
+
+---
+
+### 6) Ejecutar esquema + carga de datos
+Ejecuta el script desde dentro del contenedor para evitar problemas de red:
+```bash
+docker compose exec sqlserver /bin/bash -lc '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -C -i /init/00_schema_and_load.sql'
+```
+
+---
+
+### 7) Verificación (conteos esperados)
+**Esperado:** `Users=137`, `Logs=10000`, `Areas=3`
+
+```bash
+docker compose exec sqlserver /bin/bash -lc '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -C -Q "
+SELECT COUNT(*) AS Users FROM CCenterRIA.dbo.ccUsers;
+SELECT COUNT(*) AS Logs  FROM CCenterRIA.dbo.ccloglogin;
+SELECT COUNT(*) AS Areas FROM CCenterRIA.dbo.ccRIACat_Areas;"'
+```
+
+---
+
+## Estructura del repositorio
+
+- `compose.yml` → define servicios y volúmenes
+- `db/source/CCenterRIA.xlsx` → archivo fuente (Excel)
+- `db/init/00_schema_and_load.sql` → creación de DB + BULK INSERT + carga tipada
+- `tools/xlsx2tsv/` → contenedor Python para convertir XLSX a TSV
+
+---
+
+## Evidencia (screenshots)
+
+Guarda tus capturas en:
+- `docs/evidence/`
+
+Nombres sugeridos:
+- `01-build-xlsx2tsv.png`
+- `02-sqlserver-up.png`
+- `03-xlsx2tsv-output.png`
+- `04-import-folder.png`
+- `05-seed-success.png`
+- `06-ssms-counts.png`
+
+Luego referencia así:
+
+### Docker Compose + Loader
+![Build xlsx2tsv](evidence/Parte1.jpeg)
+![SQL Server running](evidence/Parte2.jpeg)
+
+### Validación de datos
+![SSMS counts](evidence/Parte3.jpeg)
+
+---
+
+## Reset / Re-ejecución limpia
+
+Borra contenedores, red y volúmenes (incluye data):
+```bash
+docker compose down -v --remove-orphans
+```
+
+Recrear todo:
+```bash
+docker compose build xlsx2tsv
+docker compose up -d sqlserver
+docker compose run --rm xlsx2tsv
+docker compose exec sqlserver /bin/bash -lc '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -C -i /init/00_schema_and_load.sql'
+```
+
+---
+
+## Troubleshooting (rápido)
+
+- **SQL Server tarda en iniciar:**  
+  Revisa logs:
+  ```bash
+  docker compose logs -f sqlserver
+  ```
+
+- **No existen TSV en el contenedor:**  
+  Verifica carpeta import:
+  ```bash
+  docker compose exec sqlserver /bin/bash -lc "ls -lah /var/opt/mssql/import"
+  ```
+
+- **Reiniciar desde cero (sin residuos):**  
+  ```bash
+  docker compose down -v --remove-orphans
+  ```
