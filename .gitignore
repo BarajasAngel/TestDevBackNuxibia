@@ -53,3 +53,5 @@ Thumbs.db
 
 # NO ignorar el archivo de ejemplo
 !.env.example
+
+.vs/

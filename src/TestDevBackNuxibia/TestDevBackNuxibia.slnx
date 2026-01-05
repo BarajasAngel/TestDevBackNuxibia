@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="CCenter.Api/CCenter.Api.csproj" />
+  <Project Path="CCenter.Data/CCenter.Data.csproj" />
+  <Project Path="CCenter.Services/CCenter.Services.csproj" />
+</Solution>

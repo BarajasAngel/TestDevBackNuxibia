@@ -1,0 +1,15 @@
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\bin\Debug\net8.0\CCenter.Data.deps.json
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\bin\Debug\net8.0\CCenter.Data.runtimeconfig.json
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\bin\Debug\net8.0\CCenter.Data.dll
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\bin\Debug\net8.0\CCenter.Data.pdb
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\obj\Debug\net8.0\CCenter.Data.csproj.AssemblyReference.cache
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\obj\Debug\net8.0\CCenter.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\obj\Debug\net8.0\CCenter.Data.AssemblyInfoInputs.cache
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\obj\Debug\net8.0\CCenter.Data.AssemblyInfo.cs
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\obj\Debug\net8.0\CCenter.Data.csproj.CoreCompileInputs.cache
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\obj\Debug\net8.0\CCenter.Data.sourcelink.json
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\obj\Debug\net8.0\CCenter.Data.dll
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\obj\Debug\net8.0\refint\CCenter.Data.dll
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\obj\Debug\net8.0\CCenter.Data.pdb
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\obj\Debug\net8.0\CCenter.Data.genruntimeconfig.cache
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Data\obj\Debug\net8.0\ref\CCenter.Data.dll

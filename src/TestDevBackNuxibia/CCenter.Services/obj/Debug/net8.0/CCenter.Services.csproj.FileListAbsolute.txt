@@ -1,0 +1,16 @@
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\bin\Debug\net8.0\CCenter.Services.deps.json
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\bin\Debug\net8.0\CCenter.Services.dll
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\bin\Debug\net8.0\CCenter.Services.pdb
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\bin\Debug\net8.0\CCenter.Data.dll
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\bin\Debug\net8.0\CCenter.Data.pdb
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\obj\Debug\net8.0\CCenter.Services.csproj.AssemblyReference.cache
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\obj\Debug\net8.0\CCenter.Services.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\obj\Debug\net8.0\CCenter.Services.AssemblyInfoInputs.cache
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\obj\Debug\net8.0\CCenter.Services.AssemblyInfo.cs
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\obj\Debug\net8.0\CCenter.Services.csproj.CoreCompileInputs.cache
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\obj\Debug\net8.0\CCenter.Services.sourcelink.json
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\obj\Debug\net8.0\CCenter..33BBFAF9.Up2Date
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\obj\Debug\net8.0\CCenter.Services.dll
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\obj\Debug\net8.0\refint\CCenter.Services.dll
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\obj\Debug\net8.0\CCenter.Services.pdb
+C:\Users\baraj\Documents\PruebaTecnica\TestDevBackNuxibia\src\TestDevBackNuxibia\CCenter.Services\obj\Debug\net8.0\ref\CCenter.Services.dll
