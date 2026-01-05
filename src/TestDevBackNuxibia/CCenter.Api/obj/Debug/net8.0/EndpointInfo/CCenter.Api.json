@@ -108,6 +108,18 @@
           }
         }
       }
+    },
+    "/reports/worked-hours.csv": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {

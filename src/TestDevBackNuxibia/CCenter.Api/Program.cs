@@ -25,6 +25,7 @@ builder.Services.AddDbContext<CCenterDbContext>(opt =>
     opt.UseSqlServer(csb.ConnectionString));
 
 builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

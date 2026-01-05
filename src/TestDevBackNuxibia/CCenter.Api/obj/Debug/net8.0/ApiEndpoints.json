@@ -61,5 +61,15 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CCenter.Api.Controllers.ReportsController",
+    "Method": "WorkedHoursCsv",
+    "RelativePath": "reports/worked-hours.csv",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   }
 ]

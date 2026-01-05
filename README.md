@@ -545,3 +545,122 @@ Este ejercicio se resolvió con **SQL puro** y se validó contra la base `CCente
 
 #### Usuario con más tiempo logueado
 ![Ejecución query](evidence/exercise2.jpeg)
+
+# TestDevBackNuxibia — Evidencias (Ejercicio 3: CSV + verificación de Áreas)
+
+> **Nota (Áreas):** En el dataset importado, los usuarios pueden estar asociados mayoritariamente al área **`Default`** (por `IDArea=1`).  
+> Por eso, el CSV puede mostrar `Default` para todos los registros. Abajo dejo consultas para comprobarlo en SSMS.
+
+---
+
+## Evidencias incluidas
+
+- **CSV generado (descargable desde el endpoint)**  
+  [`evidences/worked-hours.csv`](evidence/worked-hours.csv)
+
+- **Captura SSMS validando Áreas y joins**  
+  [`evidences/areas-check.png`](evidence/Parte3.jpeg)
+
+Vista rápida:
+
+![Validación de áreas en SSMS](evidence/Parte3.jpeg)
+
+---
+
+## Ejercicio 3 — Endpoint CSV
+
+El endpoint expone un archivo CSV con las columnas:
+
+- `Login` (ccUsers.Login)
+- `NombreCompleto` (Nombres + ApellidoPaterno + ApellidoMaterno)
+- `Area` (ccRIACat_Areas.AreaName)
+- `TotalHoras` (sumatoria de duración entre login/logout por usuario)
+
+### Probar desde Swagger
+1. Ejecuta la API.
+2. Abre Swagger UI: `https://localhost:7219/swagger` (el puerto puede variar).
+3. Ejecuta el endpoint del **reporte CSV** (aparece en Swagger con tag relacionado a *Report/CSV*).
+4. Descarga el archivo resultante.
+
+### Probar desde Postman (ejemplo)
+- Method: `GET`
+- URL: `https://localhost:7219/<RUTA_DEL_ENDPOINT_CSV>`
+- Headers:
+  - `Accept: text/csv`
+
+> En Postman normalmente verás el contenido en texto; también puedes usar **Save Response** para guardarlo como `.csv`.
+
+### Probar desde curl (ejemplo)
+```bash
+curl -k -L "https://localhost:7219/<RUTA_DEL_ENDPOINT_CSV>" -H "Accept: text/csv" -o worked-hours.csv
+```
+
+---
+
+## Verificación en SQL Server (Áreas y por qué sale “Default”)
+
+Conéctate a la BD `CCenterRIA` y ejecuta los siguientes **SELECT** en SSMS para validar la data.
+
+### 1) Ver cuántas áreas existen
+```sql
+SELECT
+  COUNT(*) AS TotalAreas,
+  COUNT(DISTINCT AreaName) AS DistinctAreaNames
+FROM dbo.ccRIACat_Areas;
+```
+
+### 2) Distribución de usuarios por área (lo más importante)
+```sql
+SELECT
+  u.IDArea,
+  a.AreaName,
+  COUNT(*) AS Usuarios
+FROM dbo.ccUsers u
+JOIN dbo.ccRIACat_Areas a
+  ON a.IDArea = u.IDArea
+GROUP BY
+  u.IDArea, a.AreaName
+ORDER BY
+  Usuarios DESC;
+```
+
+➡️ Si el resultado muestra que `Default` tiene el total (o casi todo), entonces es **esperable** que el CSV reporte `Default` en la columna `Area`.
+
+### 3) Buscar usuarios que NO sean Default (si existen)
+```sql
+SELECT TOP (50)
+  u.User_id,
+  u.Login,
+  u.IDArea,
+  a.AreaName
+FROM dbo.ccUsers u
+JOIN dbo.ccRIACat_Areas a
+  ON a.IDArea = u.IDArea
+WHERE a.AreaName <> 'Default'
+ORDER BY u.User_id;
+```
+
+### 4) Validar que el SP del reporte ya devuelve el área correcta
+> Este SP es la fuente del endpoint CSV.
+```sql
+EXEC dbo.usp_Report_WorkedHours;
+```
+
+- Si aquí sale `Area = Default` para todos → **es por el dataset (IDArea)** o por la lógica del SP (corrobóralo con el query 2).
+- Si aquí salen `Banamex/BBVA`, pero el CSV no → revisar mapeo/serialización del endpoint.
+
+---
+
+## Validación rápida (muestra) para comparar contra el CSV
+```sql
+SELECT TOP (20)
+  u.Login,
+  CONCAT(u.Nombres, ' ', u.ApellidoPaterno, ' ', ISNULL(u.ApellidoMaterno, '')) AS NombreCompleto,
+  a.AreaName
+FROM dbo.ccUsers u
+JOIN dbo.ccRIACat_Areas a
+  ON a.IDArea = u.IDArea
+ORDER BY u.User_id;
+```
+
+---

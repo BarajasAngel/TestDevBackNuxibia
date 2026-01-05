@@ -1,5 +1,7 @@
 ﻿using CCenter.Data.Entities;
+using CCenter.Data.QueryModels;
 using Microsoft.EntityFrameworkCore;
+using CCenter.Data.QueryModels;
 
 namespace CCenter.Data;
 
@@ -10,6 +12,8 @@ public sealed class CCenterDbContext : DbContext
     public DbSet<LoginEvent> Logins => Set<LoginEvent>();
     public DbSet<User> Users => Set<User>();
     public DbSet<Area> Areas => Set<Area>();
+    public DbSet<WorkedHoursRow> WorkedHoursReport => Set<WorkedHoursRow>();
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -56,6 +60,12 @@ public sealed class CCenterDbContext : DbContext
             e.ToTable("ccRIACat_Areas", "dbo");
             e.HasKey(x => new { x.IDArea, x.AreaName });
             e.Property(x => x.IDArea).HasColumnName("IDArea").HasColumnType("int");
+        });
+
+        modelBuilder.Entity<WorkedHoursRow>(e =>
+        {
+            e.HasNoKey();
+            e.ToView(null); 
         });
     }
 }

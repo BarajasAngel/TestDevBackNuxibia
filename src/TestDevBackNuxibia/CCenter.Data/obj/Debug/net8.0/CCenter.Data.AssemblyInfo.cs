@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CCenter.Data")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+832b0587f3bc2a4896a30f34a8a7e8444eebe4f6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9127a9cac25a143935fd604bc3bcd8ad627d9c75")]
 [assembly: System.Reflection.AssemblyProductAttribute("CCenter.Data")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CCenter.Data")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
