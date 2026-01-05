@@ -298,7 +298,7 @@ docker compose exec sqlserver /bin/bash -lc '/opt/mssql-tools18/bin/sqlcmd -S lo
   ```bash
   docker compose down -v --remove-orphans
   ```
-  
+
 # TestDevBackNuxibia (CCenter API)
 
 API REST en **.NET 8** + **Entity Framework Core** + **SQL Server (Docker)** para gestionar eventos de login (`ccloglogin`) con validaciones de negocio:
@@ -516,3 +516,32 @@ curl -k -X PUT "https://localhost:7219/logins/1" ^
 ![PUT logins 200](evidence/Put200.jpeg)
 
 ---
+
+## Ejercicio 2: Consultas SQL y Optimización
+
+Este ejercicio se resolvió con **SQL puro** y se validó contra la base `CCenterRIA` levantada en Docker.
+
+### Archivos
+- **SQL:** `db/scripts/exercise2.sql`  
+  Contiene las 3 consultas solicitadas:
+  1) Usuario con **más** tiempo logueado  
+  2) Usuario con **menos** tiempo logueado  
+  3) Promedio de tiempo logueado por **mes** (por usuario)
+
+- **Evidencia:** `evidence/` (capturas de resultados)
+
+### Cómo ejecutarlo (SSMS / Azure Data Studio)
+1. Conectarse a SQL Server:
+   - Host: `localhost`
+   - Puerto: `1433`
+   - Usuario: `sa`
+   - Password: `MSSQL_SA_PASSWORD`
+2. Seleccionar base de datos:
+   - `CCenterRIA`
+3. Abrir y ejecutar:
+   - `db/scripts/exercise2.sql`
+
+### Evidencia (capturas)
+
+#### Usuario con más tiempo logueado
+![Ejecución query](evidence/exercise2.jpeg)
