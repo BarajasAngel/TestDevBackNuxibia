@@ -298,3 +298,221 @@ docker compose exec sqlserver /bin/bash -lc '/opt/mssql-tools18/bin/sqlcmd -S lo
   ```bash
   docker compose down -v --remove-orphans
   ```
+  
+# TestDevBackNuxibia (CCenter API)
+
+API REST en **.NET 8** + **Entity Framework Core** + **SQL Server (Docker)** para gestionar eventos de login (`ccloglogin`) con validaciones de negocio:
+
+- No permite crear eventos para usuarios inexistentes (`ccUsers`).
+- No permite insertar un evento con `fecha` menor al último evento del usuario.
+- Expone endpoints CRUD básicos vía Swagger.
+
+---
+
+## Stack
+
+- .NET 8 (ASP.NET Core Web API)
+- EF Core + SQL Server provider
+- SQL Server 2022 en contenedor Docker
+- Swagger / OpenAPI
+
+---
+
+## Estructura del repositorio (alto nivel)
+
+> (Puede variar según la plantilla del reto; ajusta si tu repo difiere)
+
+- `src/`
+  - `CCenter.Api/` (Web API)
+  - `CCenter.Data/` (DbContext + Entities + Migrations)
+  - `CCenter.Services/` (Servicios + contratos + DTOs)
+- `docs/screenshots/` (capturas para evidencia en este README)
+
+---
+
+## Requisitos
+
+- **.NET SDK 8**
+- **Docker Desktop**
+- Un cliente para SQL (SSMS / Azure Data Studio)
+- Archivos `.tsv` de prueba (los del reto) para `BULK INSERT`
+
+---
+
+## Variables de entorno
+
+La solución usa `MSSQL_SA_PASSWORD` para completar el `Password` de la connection string cuando no viene embebido:
+
+### PowerShell
+```powershell
+$env:MSSQL_SA_PASSWORD="TuPasswordFuerte_123"
+```
+
+---
+
+## 1) Levantar SQL Server con Docker
+
+Ejemplo (ajusta el password si quieres):
+
+```bash
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=TuPasswordFuerte_123" ^
+  -p 1433:1433 --name sql-ccenter -d mcr.microsoft.com/mssql/server:2022-latest
+```
+
+### Copiar TSVs al contenedor
+
+> El script SQL espera los archivos en: `/var/opt/mssql/import/`
+
+```bash
+docker exec -it sql-ccenter mkdir -p /var/opt/mssql/import
+docker cp ccUsers.tsv sql-ccenter:/var/opt/mssql/import/ccUsers.tsv
+docker cp ccloglogin.tsv sql-ccenter:/var/opt/mssql/import/ccloglogin.tsv
+docker cp ccRIACat_Areas.tsv sql-ccenter:/var/opt/mssql/import/ccRIACat_Areas.tsv
+```
+
+---
+
+## 2) Crear DB, tablas y cargar datos (script SQL)
+
+- Host: `localhost`
+- Puerto: `1433`
+- Usuario: `sa`
+- Password: `MSSQL_SA_PASSWORD`
+
+### Validación rápida (SQL)
+
+```sql
+USE CCenterRIA;
+
+SELECT COUNT(*) AS Users  FROM dbo.ccUsers;
+SELECT COUNT(*) AS Logs   FROM dbo.ccloglogin;
+SELECT COUNT(*) AS Areas  FROM dbo.ccRIACat_Areas;
+```
+
+---
+
+## 3) Migraciones (EF Core)
+
+> En este reto se utilizó una migración **Baseline** para alinear EF con el esquema ya creado por el script SQL.
+
+### Desde Package Manager Console (Visual Studio)
+
+- **Default project**: `CCenter.Data`
+- **Startup project**: `CCenter.Api`
+
+Comandos:
+
+```powershell
+Add-Migration Baseline
+Update-Database
+```
+
+---
+
+## 4) Ejecutar la API
+
+1. Selecciona proyecto de inicio: `CCenter.Api`
+2. Ejecuta (F5)
+3. Abre Swagger:
+
+- `https://localhost:7219/swagger`
+
+> El puerto puede variar según tu perfil de launchSettings.
+
+---
+
+## 5) Endpoints principales
+
+- `GET /logins` — lista eventos
+- `POST /logins` — crea evento (valida usuario y regla de fecha)
+- `PUT /logins/{id}` — actualiza evento
+- `DELETE /logins/{id}` — elimina evento (si aplica)
+
+---
+
+## 6) Pruebas manuales (Swagger + curl)
+
+> Si `curl` falla por certificado local, usa `-k`.
+
+### Preparar datos (SQL)
+
+Obtén un `userId` existente y una `NextValidFecha`:
+
+```sql
+USE CCenterRIA;
+
+SELECT TOP (1) User_id
+FROM dbo.ccUsers
+ORDER BY User_id;
+
+SELECT DATEADD(MINUTE, 1, MAX(fecha)) AS NextValidFecha
+FROM dbo.ccloglogin
+WHERE User_id = 70;
+```
+
+### GET /logins (OK)
+
+```bash
+curl -k -X GET "https://localhost:7219/logins" -H "accept: */*"
+```
+
+**Expected**: `200 OK` + JSON array
+
+### POST /logins (OK)
+
+```bash
+curl -k -X POST "https://localhost:7219/logins" ^
+  -H "Content-Type: application/json" ^
+  -d "{"userId":70,"extension":100,"tipoMov":1,"fecha":"2026-01-05T17:20:00Z"}"
+```
+
+**Expected**: `201 Created` + body con `id`
+
+### POST /logins (Error: user inexistente)
+
+```bash
+curl -k -X POST "https://localhost:7219/logins" ^
+  -H "Content-Type: application/json" ^
+  -d "{"userId":0,"extension":100,"tipoMov":1,"fecha":"2026-01-05T17:20:00Z"}"
+```
+
+**Expected**: `400 Bad Request` + `{"error":"User_id 0 no existe en ccUsers."}`
+
+### POST /logins (Error: fecha menor al último evento del usuario)
+
+```bash
+curl -k -X POST "https://localhost:7219/logins" ^
+  -H "Content-Type: application/json" ^
+  -d "{"userId":70,"extension":100,"tipoMov":1,"fecha":"2000-01-01T00:00:00Z"}"
+```
+
+**Expected**: `400 Bad Request` + `{"error":"No se permite insertar un evento con fecha menor al último evento del usuario."}`
+
+### PUT /logins/{id} (OK)
+
+```bash
+curl -k -X PUT "https://localhost:7219/logins/1" ^
+  -H "Content-Type: application/json" ^
+  -d "{"extension":100,"tipoMov":0,"fecha":"2026-01-05T17:30:00Z"}"
+```
+
+**Expected**: `200 OK` + body actualizado
+
+---
+
+## 7) Evidencia (capturas)
+
+#### GET /logins (OK)
+![GET logins OK](evidence/Get200.jpeg)
+
+#### POST /logins (201 Created)
+![POST logins 201](evidence/Post201.jpeg)
+
+#### POST /logins (400 user inexistente)
+![POST user inválido 400](evidence/Post400.jpeg)
+
+
+#### PUT /logins/{id} (200 OK)
+![PUT logins 200](evidence/Put200.jpeg)
+
+---
