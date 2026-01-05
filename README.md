@@ -662,5 +662,40 @@ JOIN dbo.ccRIACat_Areas a
   ON a.IDArea = u.IDArea
 ORDER BY u.User_id;
 ```
+---
+
+## Extras: Pruebas unitarias
+
+El proyecto incluye pruebas unitarias para validar la lógica principal de servicios (sin depender de la API ni de Swagger).
+
+### Requisitos
+- Visual Studio 2022 (recomendado) con el workload **.NET Desktop Development** o **ASP.NET and web development**
+- .NET SDK (la versión usada por la solución)
 
 ---
+
+## Ejecutar pruebas desde Visual Studio (Explorador de pruebas)
+
+1. Abre la solución en Visual Studio:
+   - `TestDevBackNuxibia.sln`
+
+2. Abre el Explorador de pruebas:
+   - Menú: **Prueba** → **Explorador de pruebas**
+
+3. Ejecuta todas las pruebas:
+   - Clic en **Ejecutar todo** (▶)
+
+4. Verifica que todas las pruebas queden en verde.
+
+**Evidencia (Explorador de pruebas):**
+
+![Ejecución de pruebas unitarias - Explorador de pruebas](evidence/UnitTest.jpeg)
+
+---
+
+## Ejecutar pruebas desde consola (opcional)
+
+Desde la raíz del repo:
+
+```bash
+dotnet test
