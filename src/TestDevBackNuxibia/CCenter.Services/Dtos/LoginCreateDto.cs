@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace CCenter.Services.Dtos;
 
 public sealed class LoginCreateDto
-{
+{    
+
     [Required]
     public int UserId { get; set; }
 

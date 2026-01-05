@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="CCenter.Api/CCenter.Api.csproj" />
   <Project Path="CCenter.Data/CCenter.Data.csproj" />
+  <Project Path="CCenter.Services.Tests/CCenter.Services.Tests.csproj" Id="220754c9-0e7f-4760-8634-7b1da7f77533" />
   <Project Path="CCenter.Services/CCenter.Services.csproj" />
 </Solution>
