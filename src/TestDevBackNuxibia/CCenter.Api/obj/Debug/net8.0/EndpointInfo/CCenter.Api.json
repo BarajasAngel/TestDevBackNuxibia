@@ -24,17 +24,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginCreateRequest"
+                "$ref": "#/components/schemas/LoginCreateDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginCreateRequest"
+                "$ref": "#/components/schemas/LoginCreateDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginCreateRequest"
+                "$ref": "#/components/schemas/LoginCreateDto"
               }
             }
           }
@@ -47,27 +47,6 @@
       }
     },
     "/logins/{id}": {
-      "get": {
-        "tags": [
-          "Logins"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
       "put": {
         "tags": [
           "Logins"
@@ -87,17 +66,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginUpdateRequest"
+                "$ref": "#/components/schemas/LoginUpdateDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginUpdateRequest"
+                "$ref": "#/components/schemas/LoginUpdateDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginUpdateRequest"
+                "$ref": "#/components/schemas/LoginUpdateDto"
               }
             }
           }
@@ -133,7 +112,12 @@
   },
   "components": {
     "schemas": {
-      "LoginCreateRequest": {
+      "LoginCreateDto": {
+        "required": [
+          "extension",
+          "fecha",
+          "userId"
+        ],
         "type": "object",
         "properties": {
           "userId": {
@@ -145,6 +129,8 @@
             "format": "int32"
           },
           "tipoMov": {
+            "maximum": 1,
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },
@@ -155,7 +141,11 @@
         },
         "additionalProperties": false
       },
-      "LoginUpdateRequest": {
+      "LoginUpdateDto": {
+        "required": [
+          "extension",
+          "fecha"
+        ],
         "type": "object",
         "properties": {
           "extension": {
@@ -163,6 +153,8 @@
             "format": "int32"
           },
           "tipoMov": {
+            "maximum": 1,
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },

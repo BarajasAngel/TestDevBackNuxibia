@@ -3,6 +3,7 @@ using CCenter.Services;
 using CCenter.Services.Contracts;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using CCenter.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ApiExceptionMiddleware>();
 
 app.MapControllers();
 app.Run();
