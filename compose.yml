@@ -1,0 +1,35 @@
+name: nuxiba-local
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql-nuxiba
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:?Set MSSQL_SA_PASSWORD in .env}"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_nuxiba_data:/var/opt/mssql
+      - import_data:/var/opt/mssql/import:ro
+      - ./db/init:/init:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$${MSSQL_SA_PASSWORD}\" -C -Q \"SELECT 1\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 25s
+
+  xlsx2tsv:
+    build:
+      context: ./tools/xlsx2tsv
+    volumes:
+      - ./db/source:/src:ro
+      - import_data:/out
+    command: ["python", "/app/convert.py", "/src/CCenterRIA.xlsx", "/out"]
+
+volumes:
+  sql_nuxiba_data:
+  import_data:

@@ -48,3 +48,8 @@ Thumbs.db
 *.mov
 *.wmv
 
+# Ignorar el archivo real de variables de entorno
+.env
+
+# NO ignorar el archivo de ejemplo
+!.env.example
